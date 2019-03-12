@@ -27,34 +27,42 @@
 % MAIN CONTENTS
 %------------------------------------------
 
-\begin{multicols}{2}
+\begin{multicols*}{2}
 
 \section{Wstęp} \label{sec:intro}
-\lipsum[1-2]
+W niniejszym dokumencie przeanalizowano raport grupy FireEye dot. złośliwego oprogramowania typu APT, tzw. ,,Hammertoss'', wykorzystującego zaawansowane metody steganografii i unikania wykrycia. Analizę przeprowadzono z punktu widzenia koncepcji Intrusion Kill Chain oraz matrycy MITRE Attack. Rozważono również potencjalne sposoby obrony przed tego rodzaju zagrożeniami. 
 
-\section{Rozdział 2} \label{sec:2}
-\lipsum[3]
-\begin{center}
-	\label{fig:anzelm}
-	\includegraphics[width=0.5\linewidth]{img/anzelm.PNG}
-	\captionof{figure}{Anzelm z Canterbury.}
-\end{center}
-\lipsum[4]
-\begin{align*}
-E & = m c^2 \\ 
-y & = a x^2 + bx + c
-\end{align*}
-\lipsum[5]
+\section{Analiza IKC} \label{sec:2}
+Według koncepcji IKC (ang. \textit{Intrusion Kill Chain}), atak sieciowy sklada się z 7 podstawowych faz:
+\begin{enumerate}
+	\itemsep0em
+	\item Rekonesans,
+	\item Uzbrajanie,
+	\item Dostarczenie,
+	\item Eksploitacja,
+	\item Instalacja,
+	\item Command and Control,
+	\item Akcje atakujących.
+\end{enumerate}
+Przedmiotowy raport nie skupia się na pierwszych pięciu fazach ataku sieciowego, począwszy od rekonesansu do instalacji; zamiast tego, otrzymujemy szczegółowey opis działania backdoora już po jego pomyślnym dostarczeniu i zainstalowaniu na maszynie ofiary. ,,Hammertoss'' stosuje zaawansowane techniki steganograficzne, wykorzystując media społecznościowe do ukrytego przekazywania komend od operatora backdoora -- jest to faza Command and Control. Dodatkowo, backdoor posiada możliwość wykradania danych z zainfekowanej maszyny i przekazywania ich na zdalny serwer atakującego. Odbywa się to poprzez upload danych na konto w chmurze, którego dane zostały przekazane w kanale C\&C. Jest to faza akcji atakujących. 
+
+\section{MITRE Attack}
+Matryca MITRE Attack stanowi metodę klasyfikacji ataków sieciowych w sposób dwupoziomowy, z podziałem na taktyki -- działania służące do osiągnięcia określonego celu oraz techniki -- w ramach zadanej taktyki, konkretny sposób (zachowanie) pozwalające na osiągnięcie zadanego celu.
+
+W przedmiotowym raporcie zawarto opisy trzech głównych taktyk realizowanych przez programowanie ,,Hammertoss'': \textit{defense evasion} (unikanie obrony), \textit{exfiltration} (infiltracja\footnote{W języku angielskim występują osobne określenia \textit{exfiltration} oznaczające ukryte wynoszenie danych oraz \textit{infiltration} posiadające głównie znaczenie hydrologiczne, ale też oznaczające uzyskanie nieautoryzowanego dostępu do miejsca lub zasobów. W języku polskim słowo ,,eksfiltracja'' nie występuje i jako takie stanowi niepoprawną kalkę językową, a zarówno nieautoryzowany dostęp do danych jak i ich wynoszenie na zewnątrz mieszczą się w zakresie słowa ,,infiltracja'', używanego głównie w żargonie wojskowym.}) oraz \textit{command and control}:
+\begin{enumerate}
+	\item \textit{Defense evasion}: ,,Hammertoss'' wykorzystuje technikę \textit{Deobfuscate/Decode Files or Information}, a mianowicie ukrywanie danych w plikach obrazkowych, zamieszczanych na generowanych pseudolosowo kontach twitterowych sprawiających wrażenie kont zwyczajnych użytkowników;
+	\item \textit{Exfiltration}: ,,Hammertoss'' oprócz tego, że ukrywa dane (steganografia) to stosuje jeszcze szyfrowanie (\textit{Data encryption}), wyprowadzając dane poprzez upload na zadane konto w chmurze; dane tego konta przekazywane sa w kanale C\&C, jest to technika \textit{Exfiltration Over Alternative Protocol};
+	\item \textit{Command and control}: do komunikacji z operatorem stworzono autorski protokół komunikacji (\textit{Custom Command and Control Protocol}), którzy wykorzystuje Twittera jako warstwę pośrednią (\textit{Connection Proxy}), ukrywający komendy do przekazania w plikach obrazkowych (\textit{Data Obfuscation}).
+\end{enumerate}
+Techniki te połączone razem tworzą narzędzie, które jest szczególnie trudne do wykrycia. 
+
+\section{Techniki obrony}
+,,Hammertoss'' stosuje znany algorytm ukrywania danych w pliku obrazkowym, możliwe jest więc stosowanie narzędzi przeznaczonych do wykrywania tego rodzaju ukrytej transmisji za pomocą sygnatur. Wydaje się jednak, że w wypadku nieznanego zagrożenia realizującego działania steganograficzne, główną linią obrony powinna być analiza ruchu przez systemy typu IDS/IPS. Wykrycie anomalii w ruchu sieciowym, np. ponadprzeciętnie częstych zapytań do Twittera, powinno zwrócić uwagę administratorów na możliwość zainfekowania sieci przez nieznany malware, wykorzystujący Twittera jako medium komunikacji.
 
 \section{Podsumowanie} \label{sec:summary}
-\lipsum[6]
-
-\section*{Literaura}
-
-\noindent [Anderson, 1990] Anderson, C. A. (1990). Some emendations of G\"odel’s ontological proof. \textit{Faith and Philosophy}, str. 291–303. Dostęp zdalny (PDF): \url{https://somewebsite.com/ontological-proof22.pdf}  
-\\ \\
-\noindent [Anderson, 1996] Anderson, C. A.; Geettings, M. (1996). G\"odel’s ontological proof revisited. \textit{Lecture Notes in Logic}, str. 167–172. Dostęp zdalny (PDF): \url{https://projecteuclid.org/download/pdf_1/euclid.lnl/1235417020}
+Raport FireEye stanowi interesującą analizę niebezpiecznego oprogramowania, które dzięki połączeniu wielu różnych technik w jednym narzędziu stanowi duże wyzwanie dla cyberbezpieczeństwa. 
 
 
-\end{multicols}
+\end{multicols*}
 \end{document}
